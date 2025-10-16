@@ -25,7 +25,7 @@
 !     that iterates from 1 to "geom%ni_a", the length of the first domain curve
 !     INSERTED
       do int = 1, geom%ni_a
-            read(1,*) geom%x_a, geom%y_a 
+            read(1,*) geom%x_a(int), geom%y_a(int) 
       end do
 
 
@@ -35,7 +35,7 @@
       read(1,*) geom%ni_b
       allocate(geom%x_b(geom%ni_b),geom%y_b(geom%ni_b))
       do int = 1, geom%ni_b
-            read(1,*) geom%x_b, geom%y_b 
+            read(1,*) geom%x_b(int), geom%y_b(int) 
       end do
 
 !     Print the lengths of the curves that have been successfully read

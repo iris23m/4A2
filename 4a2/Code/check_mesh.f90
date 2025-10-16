@@ -23,13 +23,29 @@
 !     "minval" function or with nested do loops. Print the output to the screen
 !     and flag negative numbers as an error with an if statement to "stop" the
 !     program
-!     INSERT
+!     INSERTED
+      area_min = minval(g%area)
+      write(6,*) 'minimum cell area: ', area_min
+      if (area_min <= 0) then
+            stop
+      end if
 
 !     Next check that the sum of the edge vectors around every quadrilateral is 
 !     very nearly zero in both the x and y-coordinate directions. You can
 !     complete this with some elementwise addition of the arrays and use of the
 !     "maxval" and "abs" intrinsic functions.
-!     INSERT
+!     INSERTED
+      dx_error = maxval(g%lx_i(1:ni-1,1:nj-1)+ g%lx_j(1:ni-1,1:nj-1) +g%lx_i(2:ni,1:nj-1) + g%lx_j(1:ni-1,2:nj))
+      dy_error = maxval(g%ly_i(1:ni-1,1:nj-1)+ g%ly_j(1:ni-1,1:nj-1) +g%ly_i(2:ni,1:nj-1) + g%ly_j(1:ni-1,2:nj))
+      
+      if (abs(dx_error)>tol) then
+            write(6,*) 'facet vectors dont sum to 0 in x' , maxval(g%lx_i(1:ni-1,1:nj-1)+ g%lx_j(1:ni-1,1:nj-1) +g%lx_i(2:ni,1:nj-1) + g%lx_j(1:ni-1,2:nj))
+      else if (abs(dy_error)>tol) then
+            write(6,*) 'facet vectors dont sum to 0 in y'
+      else 
+            write(6,*) 'Check complete: facet vectors sum to 0'
+      end if
+
 
 !     It may be worthwhile to complete some other checks, the prevous call to
 !     the "write_output" subroutine has written a file that you can read and

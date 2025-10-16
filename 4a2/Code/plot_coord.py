@@ -31,7 +31,7 @@ def main():
     plot_bound(ax,g)
 
     # Show all the plots
-    plt.show()
+    plt.savefig("myplot.png")
 
     
 main()
