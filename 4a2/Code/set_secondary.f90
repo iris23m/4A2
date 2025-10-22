@@ -9,6 +9,7 @@
       implicit none
       type(t_appvars), intent(in) :: av
       type(t_grid), intent(inout) :: g
+      real, dimension(:,:), allocatable :: T, M_squared
 
 !     Define any further variables you may need
 !     INSERT
@@ -21,6 +22,12 @@
 !     loops as the operations can be performed elementwise, although you may
 !     wish to define some intermediate variables to improve readability.
 !     INSERT
+      g%vx = g%rovx/g%ro
+      g%vy = g%rovx/g%ro
+      T = (g%roe - 0.5*g%ro*hypot(g%vx, g%vy)**2)/(av%cv*g%ro)
+      g%p = g%ro * av%rgas * T/av%cv
+      M_squared = hypot(g%vx, g%vy)/(av%gam*av%rgas*T)
+      g%hstag = av%cp *(1+0.5*(av%gam-1)*M_squared)*T
 
       end subroutine set_secondary
 

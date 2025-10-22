@@ -35,8 +35,8 @@
 !     complete this with some elementwise addition of the arrays and use of the
 !     "maxval" and "abs" intrinsic functions.
 !     INSERTED
-      dx_error = maxval(g%lx_i(1:ni-1,1:nj-1)+ g%lx_j(1:ni-1,1:nj-1) +g%lx_i(2:ni,1:nj-1) + g%lx_j(1:ni-1,2:nj))
-      dy_error = maxval(g%ly_i(1:ni-1,1:nj-1)+ g%ly_j(1:ni-1,1:nj-1) +g%ly_i(2:ni,1:nj-1) + g%ly_j(1:ni-1,2:nj))
+      dx_error = maxval(-g%lx_i(1:ni-1,1:nj-1)- g%lx_j(1:ni-1,1:nj-1) +g%lx_i(2:ni,1:nj-1) + g%lx_j(1:ni-1,2:nj))
+      dy_error = maxval(-g%ly_i(1:ni-1,1:nj-1)- g%ly_j(1:ni-1,1:nj-1) +g%ly_i(2:ni,1:nj-1) + g%ly_j(1:ni-1,2:nj))
       
       if (abs(dx_error)>tol) then
             write(6,*) 'facet vectors dont sum to 0 in x' , maxval(g%lx_i(1:ni-1,1:nj-1)+ g%lx_j(1:ni-1,1:nj-1) +g%lx_i(2:ni,1:nj-1) + g%lx_j(1:ni-1,2:nj))

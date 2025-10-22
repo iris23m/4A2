@@ -40,7 +40,9 @@ def main():
         plot_wall(ax[n],g)
 
     # Show all the plots
-    plt.show()
+    plt.show(plt.savefig("myplot2.png"))
+
+
 
     
 main()

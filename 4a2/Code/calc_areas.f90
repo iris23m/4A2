@@ -58,7 +58,7 @@
 !     facets. 
 !     INSERTED
       g%ly_j = g%x(2:ni,1:nj)-g%x(1:ni-1, 1:nj)
-      g%lx_j = g%y(2:ni,1:nj)-g%y(1:ni-1, 1:nj)
+      g%lx_j = -g%y(2:ni,1:nj)+g%y(1:ni-1, 1:nj)
 
 !     Find the minimum length scale in the mesh, this is defined as the length
 !     of the shortest side of all the cells. Call this length "l_min", it is used
