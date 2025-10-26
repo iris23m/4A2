@@ -116,13 +116,13 @@
                   do i = 1,ni-1
                         lx = g%lx_j(i,j); ly = g%ly_j(i,j); 
                         l = hypot(lx,ly)
-                        g%vx(i,j) = v_guess(i) * lx/l !ly?
-                        g%vy(i,j) = v_guess(i) * ly/l !lz?
+                        g%vx(i,j) = v_guess(i) * ly/l 
+                        g%vy(i,j) = v_guess(i) * -lx/l 
 
                         !e(i) = 0.5*v_guess(i)**2
 
                         g%ro(i, j) = ro_guess(i)
-                        g%roe(i,j) = ro_guess(i) * 0.5*v_guess(i)**2 
+                        g%roe(i,j) = av%cv*t_guess(i) + (ro_guess(i) * 0.5*v_guess(i)**2 )
                         g%rovx(i,j) = ro_guess(i) * g%vx(i,j)
                         g%rovy(i,j) = ro_guess(i) * g%vy(i,j)
                   end do

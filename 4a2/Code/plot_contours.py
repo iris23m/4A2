@@ -32,6 +32,14 @@ def main():
     # reference pressures at the inlet plane and therefore the static pressure
     # coefficient
     # INSERT
+    inletcut = cut_i(g,0)
+    p_ref, mass = mass_av(inletcut, 'p')
+    pstag_ref, mass = mass_av(inletcut, 'pstag')
+    print(g['p'].shape)
+    print(p_ref)
+    print(pstag_ref)
+    g['cp'] = (g['p'] - p_ref) / (pstag_ref-p_ref)
+
 
     # Specify the parameters to plot
     fieldnames = ['cp', 'mach']; 
@@ -59,9 +67,14 @@ def main():
 
         # Draw the walls of the block
         plot_wall(ax,g)
+        filename = f"myplot_{name}.png" 
+        plt.savefig(filename)
+
 
     # Show all the plots
     plt.show()
+    
+    
 
     
 main()

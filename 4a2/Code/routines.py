@@ -21,6 +21,15 @@ def calc_secondary(av,b):
     # your post-processing, save them into the block "b" dictionary alongside
     # mesh coordinates and primary flow variables.
     # INSERT
+    b['vx'] = b['rovx']/b['ro']
+    b['vy'] = b['rovy']/b['ro']
+    b['T'] = 1/av['cv'] * (b['roe']/b['ro'] - 0.5*(b['vx']**2+b['vy']**2))
+    b['mach'] = np.sqrt(b['vx']**2+b['vy']**2)/np.sqrt(av['gam']*av['rgas']*b['T'])
+    b['p'] = b['ro']*av['rgas']*b['T']
+    b['tstag'] = b['T']*(1+((av['gam']-1)/2)*b['mach']**2)
+    b['pstag'] = b['p']*(b['tstag']/b['T'])**(av['gam']/(av['gam']-1))
+    b['alpha'] = np.arctan2(b['vy'],b['vx'])
+    b['hrel'] = av['cv']*(b['T'] - av['tstag']) #references it to inlet stagnation enthalpy
 
     return b
 
