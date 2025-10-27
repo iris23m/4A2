@@ -43,12 +43,16 @@
 !     INSERTED
       call linspace(0.0, 1.0, sj)
       do i = 1, ni
-            do j = 2, nj
+            do j = 1, nj
                   !weight = (j-1)/(nj-1)
                   g%x(i,j) = (sj(j)*g%x(i,nj)) + ((1-sj(j))*g%x(i,1))
                   g%y(i,j) = (sj(j)*g%y(i,nj)) + ((1-sj(j))*g%y(i,1))
             end do
-      end do     
+      end do  
+      !do n = 1,ni
+       !   g%x(n,:) = g%x(n,1) * (1-sj(:)) + g%x(n,nj) * sj(:)
+        !  g%y(n,:) = g%y(n,1) * (1-sj(:)) + g%y(n,nj) * sj(:)
+      !end do   
 
 !     In all of the test cases for the basic solver the the "j = 1" and "j = nj"
 !     boundaries are walls, for the extensions you may need to return to this

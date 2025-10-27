@@ -82,7 +82,7 @@
 !         guess, call this "mach_lim", calculate the corresponding temperature,
 !         called "t_lim"
 !         INSERTED
-            mach_lim = 1
+            mach_lim = 0.5 !1
             t_lim = bcs%tstag / (1+((av%gam-1)/2)*mach_lim**2)
 
 
@@ -95,7 +95,8 @@
 !             5. Calculate the density throughout "ro_guess(i)"
 !             6. Update the estimate of the velocity "v_guess(i)" 
 !         INSERTED
-            v_guess = mdot_out/(ro_out*l_i)
+            ro_guess = ro_out
+            v_guess = mdot_out/(ro_guess*l_i)
             t_guess = bcs%tstag- (v_guess**2)/(2*av%cp)
             t_guess = max(t_guess, t_lim)
             !T/rho^gam-1 is const
@@ -117,14 +118,14 @@
                         lx = g%lx_j(i,j); ly = g%ly_j(i,j); 
                         l = hypot(lx,ly)
                         g%vx(i,j) = v_guess(i) * ly/l 
-                        g%vy(i,j) = v_guess(i) * -lx/l 
+                        g%vy(i,j) = v_guess(i) * -lx/l !-lx/l?
 
                         !e(i) = 0.5*v_guess(i)**2
 
-                        g%ro(i, j) = ro_guess(i)
-                        g%roe(i,j) = av%cv*t_guess(i) + (ro_guess(i) * 0.5*v_guess(i)**2 )
-                        g%rovx(i,j) = ro_guess(i) * g%vx(i,j)
-                        g%rovy(i,j) = ro_guess(i) * g%vy(i,j)
+                        g%ro(i, :) = ro_guess(i)
+                        g%roe(i,j) =  g%ro(i,j) * ( av%cv*t_guess(i) + 0.5*v_guess(i)**2 ) !t_out?
+                        g%rovx(i,j) = g%ro(i,j) * g%vx(i,j)
+                        g%rovy(i,j) = g%ro(i,j) * g%vy(i,j)
                   end do
             end do
 

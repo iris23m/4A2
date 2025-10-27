@@ -27,8 +27,7 @@
 
 !     Calculate the timestep using the CFL number and store it in "av%dt"
 !     INSERTED
-      CFL = 0.6
-      av%dt = CFL*g%l_min/(astag+v_max)
+      av%dt = av%cfl*g%l_min/(astag+v_max)
 
 
 !     Print the calculated timestep and some intermediate values
