@@ -44,12 +44,10 @@
       V = sqrt( 2*av%cp * (bcs%tstag - T) )
       g%vx(1,:) = V * cos(bcs%alpha)
       g%vy(1,:) = V * sin(bcs%alpha)
-      g%rovx(1,:) = bcs%ro * g%vx(1,:)
-      g%rovy(1,:) = bcs%ro * g%vy(1,:)
+      g%rovx(1,:) = g%ro(1,:) * g%vx(1,:) !bcs%ro * g%vx(1,:)
+      g%rovy(1,:) =  g%ro(1,:) * g%vy(1,:) !bcs%ro * g%vy(1,:)
       g%roe(1,:) = bcs%ro *(av%cv*T + 0.5*V**2)
       g%hstag(1,:) = av%cp * bcs%tstag
-
-      
 
 
 !     For the outlet boundary condition set the value of "p(ni,:)" to the

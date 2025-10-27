@@ -24,8 +24,8 @@
 !     wish to define some intermediate variables to improve readability.
 !     INSERTED
       g%vx = g%rovx/g%ro
-      g%vy = g%rovx/g%ro
-      T = (g%roe - 0.5*g%ro*(g%vx**2 + g%vy**2))/(av%cv)
+      g%vy = g%rovy/g%ro
+      T = (g%roe - 0.5*g%ro*(g%vx**2 + g%vy**2))/(av%cv*g%ro)
       g%p = g%ro * av%rgas * T
       M_squared = (g%vx**2+ g%vy**2)/(av%gam*av%rgas*T)
       g%hstag = av%cp *(1+0.5*(av%gam-1)*M_squared)*T

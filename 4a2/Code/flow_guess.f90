@@ -113,19 +113,19 @@
 !         includes the kinetic energy component of the internal energy.
 !         INSERTED
       
-            do j = 1,nj
-                  do i = 1,ni-1
+            do i = 1,ni-1 
+                  do j = 1,nj
                         lx = g%lx_j(i,j); ly = g%ly_j(i,j); 
                         l = hypot(lx,ly)
-                        g%vx(i,j) = v_guess(i) * ly/l 
-                        g%vy(i,j) = v_guess(i) * -lx/l !-lx/l?
+                        !g%vx(i,j) = v_guess(i) * ly/l 
+                        !g%vy(i,j) = -v_guess(i) * lx/l !-lx/l?
 
                         !e(i) = 0.5*v_guess(i)**2
 
                         g%ro(i, :) = ro_guess(i)
                         g%roe(i,j) =  g%ro(i,j) * ( av%cv*t_guess(i) + 0.5*v_guess(i)**2 ) !t_out?
-                        g%rovx(i,j) = g%ro(i,j) * g%vx(i,j)
-                        g%rovy(i,j) = g%ro(i,j) * g%vy(i,j)
+                        g%rovx(i,j) = g%ro(i,j) * (v_guess(i) * ly/l )
+                        g%rovy(i,j) = g%ro(i,j) * (-v_guess(i) * lx/l)
                   end do
             end do
 
@@ -152,6 +152,6 @@
       av%roe_ref = sum(g%roe(1,:)) / nj
       av%rov_ref = max(sum(g%rovx(1,:)),sum(g%rovy(1,:))) / nj
 
-      end subroutine flow_guess
+      end subroutine flow_guess 
 
 

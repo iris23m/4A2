@@ -43,7 +43,7 @@
 !     INSERTED
       call linspace(0.0, 1.0, sj)
       do i = 1, ni
-            do j = 1, nj
+            do j = 1, nj !was 2 to nj
                   !weight = (j-1)/(nj-1)
                   g%x(i,j) = (sj(j)*g%x(i,nj)) + ((1-sj(j))*g%x(i,1))
                   g%y(i,j) = (sj(j)*g%y(i,nj)) + ((1-sj(j))*g%y(i,1))

@@ -31,6 +31,7 @@
 !     over the timestep "dt", save it in the array "dcell"
 !     INSERTED
       dcell = ( flux_i(1:ni-1,:) - flux_i(2:ni,:) + flux_j(:,1:nj-1) - flux_j(:,2:nj) ) * av%dt/area
+      !dcell = ( flux_i(1:ni-1,:) - flux_i(2:ni,:) + flux_j(:,1:nj-1) - flux_j(:,2:nj) ) * av%dt/area
 
 !     Now distribute the changes equally to the four corners of each cell. Each 
 !     interior grid point receives one quarter of the change from each of the 

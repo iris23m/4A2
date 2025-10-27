@@ -30,7 +30,6 @@
 !     INSERTED
       prop_avg(2:ni-1,2:nj-1) = (prop(1:ni-2,2:nj-1)+prop(3:ni,2:nj-1)+prop(2:ni-1,3:nj)+prop(2:ni-1,1:nj-2))/4.0
 
-
 !     Edge values are also averaged in both the i and j-directions. Parallel to
 !     the boundary the averaging is centred, the averages of two nodes are taken
 !     either side of the current point. Perpendicular to the boundary the

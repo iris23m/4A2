@@ -39,7 +39,7 @@
                   a(2) = g%y(i+1,j+1) - g%y(i,j)
                   b(1) = g%x(i,j+1) - g%x(i+1,j)
                   b(2) = g%y(i,j+1) - g%y(i+1,j)
-                  g%area(i,j) = 0.5 * abs((a(1)*b(2))-(a(2)*b(1)))
+                  g%area(i,j) = 0.5 * ((a(1)*b(2))-(a(2)*b(1)))
             end do
       end do
 
@@ -51,14 +51,14 @@
 !     towards the centre of the i,j cell
 !     INSERTED
 !     in this x and y need to swap for it to point normal to the facet
-      g%ly_i = -g%x(1:ni,2:nj)+g%x(1:ni, 1:nj-1)
-      g%lx_i = g%y(1:ni,2:nj)-g%y(1:ni, 1:nj-1)
+      g%ly_i = -g%x(:,2:nj)+g%x(:, 1:nj-1)
+      g%lx_i = g%y(:,2:nj)-g%y(:, 1:nj-1)
 
 !     Now repeat the calculation for the project lengths on the "j=const"
 !     facets. 
 !     INSERTED
-      g%ly_j = g%x(2:ni,1:nj)-g%x(1:ni-1, 1:nj)
-      g%lx_j = -g%y(2:ni,1:nj)+g%y(1:ni-1, 1:nj)
+      g%ly_j = g%x(2:ni,:)-g%x(1:ni-1, :)
+      g%lx_j = -g%y(2:ni,:)+g%y(1:ni-1, :)
 
 !     Find the minimum length scale in the mesh, this is defined as the length
 !     of the shortest side of all the cells. Call this length "l_min", it is used
