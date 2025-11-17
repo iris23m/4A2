@@ -42,6 +42,7 @@ def main():
 
     # Show all the plots
     plt.show()
+    plt.savefig('conv.png')
 
     
 main()

@@ -19,6 +19,8 @@
       real :: b(2)
       real, dimension(:,:), allocatable :: h_i
       real, dimension(:,:), allocatable :: h_j
+      !real, dimension(:,:), allocatable :: min_hi
+      !real, dimension(:,:), allocatable :: min_hj
       real :: min_hi
       real :: min_hj
       
@@ -70,9 +72,13 @@
       allocate(h_i(ni,nj-1), h_j(ni-1, nj))
       h_i = hypot(g%lx_i, g%ly_i) 
       h_j = hypot(g%lx_j, g%ly_j)  
-      min_hi = minval(h_i) 
-      min_hj = minval(h_j)
-      g%l_min = min(min_hi, min_hj)
+      do i = 1,ni-1
+            do j = 1,nj-1
+                  min_hi = min(h_i(i,j), h_i(i+1,j)) 
+                  min_hj = min(h_j(i,j), h_j(i,j+1))
+                  g%l_min(i,j) = min(min_hi, min_hj)  !minimum sidelength for each cell
+            end do
+      end do
 
 !     Print the overall minimum length size that has been calculated
       write(6,*) 'Calculated cell areas and facet lengths'

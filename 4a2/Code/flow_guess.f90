@@ -19,7 +19,7 @@
 
 !     Variables required for the improved guess, you will need to add to these
       real :: l_i(g%ni)
-!     INSERT
+!     INSERTED
       real :: mdot_out
       real :: v_guess(g%ni)
       real :: ro_guess(g%ni)
@@ -99,8 +99,6 @@
             v_guess = mdot_out/(ro_guess*l_i)
             t_guess = bcs%tstag- (v_guess**2)/(2*av%cp)
             t_guess = max(t_guess, t_lim)
-            !T/rho^gam-1 is const
-            !ro_guess = ((t_guess*bcs%rostag**(av%gam-1))/bcs%tstag)**(1/(av%gam-1))
             ro_guess = bcs%rostag * (1+((av%gam-1)/2)*(v_guess**2/(av%gam*av%rgas*t_guess))) ** (-1/(av%gam-1))
             v_guess = mdot_out/(ro_guess*l_i)
 
@@ -117,10 +115,6 @@
                   do j = 1,nj
                         lx = g%lx_j(i,j); ly = g%ly_j(i,j); 
                         l = hypot(lx,ly)
-                        !g%vx(i,j) = v_guess(i) * ly/l 
-                        !g%vy(i,j) = -v_guess(i) * lx/l !-lx/l?
-
-                        !e(i) = 0.5*v_guess(i)**2
 
                         g%ro(i, :) = ro_guess(i)
                         g%roe(i,j) =  g%ro(i,j) * ( av%cv*t_guess(i) + 0.5*v_guess(i)**2 ) !t_out?
@@ -132,6 +126,7 @@
            
 !         Make sure the guess has been copied for the "i = ni" values too
 !         INSERTED
+            write(*,*) ni
             g%ro(ni,:) = g%ro(ni-1,:)
             g%roe(ni,:) = g%roe(ni-1,:)
             g%rovx(ni,:) = g%rovx(ni-1,:)

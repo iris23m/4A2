@@ -14,7 +14,8 @@
           real :: rgas, gam, cp, cv, fgam
 
 !         Timestepping, smoothing and other run options
-          real ::  cfl, sfac, dt, d_max, d_avg
+          real ::  cfl, sfac, d_max, d_avg
+          real, dimension(:,:), allocatable :: dt
           integer :: nsteps, nstep
 
 !         Reference values of the primary flow variables
@@ -75,8 +76,8 @@
 
 !         Mesh coordinate data in 2D matrices
           real, dimension(:,:), allocatable :: x, y, area, lx_i, ly_i, &
-              lx_j, ly_j
-          real  ::  l_min
+              lx_j, ly_j, l_min
+          !real  ::  l_min
 
 !         Primary variables at nodes
           real, dimension(:,:), allocatable :: ro, roe, rovx, rovy

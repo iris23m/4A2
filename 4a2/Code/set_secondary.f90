@@ -30,9 +30,6 @@
       M_squared = (g%vx**2+ g%vy**2)/(av%gam*av%rgas*T)
       g%hstag = av%cp *(1+0.5*(av%gam-1)*M_squared)*T
 
-      !g%p = av%rgas / av%cv * (g%roe - 0.5 * g%ro * (g%vx**2 + g%vy**2))
-      !g%hstag = (g%roe + g%p) / g%ro
-
       end subroutine set_secondary
 
 

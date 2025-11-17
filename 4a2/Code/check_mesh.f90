@@ -11,13 +11,15 @@
       type(t_grid), intent(inout) :: g
       real :: area_min, dx_error, dy_error, tol
       integer :: ni, nj
+      real :: tmp
 
 !     Get the size of the mesh and store locally for convenience
       ni = g%ni; nj = g%nj;
 
 !     Exact checking of floating point numbers never goes well, define a
 !     small tolerance to use for a comparative operation instead
-      tol = 1e-4 * g%l_min
+      tmp = minval(g%l_min)
+      tol = 1e-4 * tmp
 
 !     Check that all of the cell areas are positive, either with the intrinsic
 !     "minval" function or with nested do loops. Print the output to the screen

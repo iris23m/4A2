@@ -19,6 +19,7 @@
 !     Read the length of the first curve and allocate the length of the arrays
 !     required to store its geometry within memory in the "geom" variable
       read(1,*) geom%ni_a
+      write(*,*) geom%ni_a
       allocate(geom%x_a(geom%ni_a),geom%y_a(geom%ni_a))
 
 !     Read the x and y coordinates of the curve from the file, create a do loop

@@ -21,8 +21,9 @@
       type(t_match) :: p
       type(t_geometry) :: geom
       type(t_grid) :: g
+      type(t_grid) :: g2
       real :: d_max = 1, d_avg = 1
-      integer :: nstep, nconv = 5, ncheck = 5
+      integer :: nstep, nconv = 5, ncheck = 5, nchange = 5000
 
 !     Read in the data on the run settings
       call read_settings(av,bcs)
@@ -33,13 +34,13 @@
 
 !         Now the size of the grid is known, the space in memory can be 
 !         allocated within the grid type
-          call allocate_arrays(av,g,bcs)
+          call allocate_arrays(av,g,g2,bcs)
 
 !         Read in the case geometry
           call read_geom(av,geom)
 
 !         Set up the mesh coordinates, interpolated between the geometry curves
-          call generate_mesh(geom,g)
+          call generate_mesh(geom,g,g2)
 
       else 
 
@@ -50,12 +51,15 @@
 
 !     Calculate cell areas and facet lengths
       call calc_areas(g)
+      call calc_areas(g2)
 
 !     Optional output call to inspect the mesh you have generated
-      call write_output(av,g,1)
+      !i guess replace the grid to choose which one to inspect
+      call write_output(av,g2,1)
 
 !     Check that the areas and projected lengths are correct
       call check_mesh(g)
+      call check_mesh(g2)
 
 !     Calculate the initial guess of the flowfield in the domain. There are two
 !     options that can be chosen with the input argument "guesstype":
@@ -75,6 +79,7 @@
 !     conservative guess of the mach number
       call set_timestep(av,g,bcs)
 
+
 !     Open file to store the convergence history. This is human readable during
 !     a long run by using "tail -f conv_example.csv" in a terminal window
       open(unit=3,file='conv_' // av%casename // '.csv')
@@ -92,32 +97,26 @@
 
 !         Update record of nstep to use in subroutines
           av%nstep = nstep
+          if (nstep < 10000) then 
+                call sub_loop(av, g , bcs)
+          else if (nstep == 10000) then
+                call interpolate_mesh(g,g2,bcs)
+                deallocate(av%dt)
+                allocate(av%dt(g2%ni-1,g2%nj-1))
+                call set_timestep(av, g2, bcs)
+                call sub_loop(av, g2, bcs)
+                
+          else 
+                call sub_loop(av, g2, bcs)
+          end if 
 
-!         Calculate secondary flow variables used in conservation equations
-          call set_secondary(av,g)
 
-!         Apply inlet and outlet values at the boundaries of the domain
-          call apply_bconds(av,g,bcs)
-
-!         Perform the timestep to update the primary flow variables
-          call euler_iteration(av,g)
-
-!         Write out summary every "nconv" steps and update "davg" and "dmax" 
-          if(mod(av%nstep,nconv) == 0) then
-              call check_conv(av,g,d_avg,d_max)
-          end if
-
-!         Check the solution hasn't diverged or a stop has been requested 
-!         every "ncheck" steps
-          if(mod(av%nstep,ncheck) == 0) then
-              call check_stop(av,g)
-          end if
-
-!         Stop marching if converged to the desired tolerance "conlim"
+          !         Stop marching if converged to the desired tolerance "conlim"
           if(d_max < av%d_max .and. d_avg < av%d_avg) then
-              write(6,*) 'Calculation converged in', nstep,'iterations'
-              exit
+                write(6,*) 'Calculation converged in', nstep,'iterations'
+                exit
           end if
+
 
       end do
 
