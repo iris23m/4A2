@@ -1,4 +1,7 @@
-
+module checkstop 
+      use types
+      implicit none
+contains
       subroutine check_stop(av,g)
 
 !     This subroutine checks for divergence in the calculation by the presence
@@ -6,21 +9,24 @@
 
 !     Explicitly declare the required variables
       use types
+      use writeout
       implicit none
       type(t_appvars), intent(in) :: av
-      type(t_grid), intent(inout) :: g
-      integer :: ifstop
+      type(t_grid), intent(inout) :: g(:)
+      integer :: ifstop, n 
 
 !     Check the stop file
       open(unit=11,file='stopit')
       read(11,*) ifstop; close(11);
 
+      do n = 1,av%nn
 !     Check for NaNs in the density
-      if(isnan(sum(g%ro))) then
-          ifstop = 2
-          write(6,*) 'NaN detected, stopping the solver'
-      end if
-     
+            if(isnan(sum(g(n)%ro))) then
+            ifstop = 2
+            write(6,*) 'NaN detected, stopping the solver'
+            end if
+      end do 
+
 !     Write output file if stop file is not zero
       if(ifstop > 1) then
           write(6,*) '"ifstop" modified, writing an output'
@@ -40,4 +46,4 @@
 
       end subroutine check_stop
 
-
+end module

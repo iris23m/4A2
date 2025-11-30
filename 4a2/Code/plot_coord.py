@@ -22,14 +22,24 @@ def main():
     ax.set_xlabel('x / m'); ax.set_ylabel('y / m');
     ax.set_aspect('equal',adjustable='box'); ax.tick_params(direction='in')
 
-    # Plot the mesh coordinates to show the cells
-    ax.plot(g['x'],g['y'],color=cols[0,:],linewidth=0.5)
-    ax.plot(np.transpose(g['x']),np.transpose(g['y']),color=cols[0,:],
-        linewidth=0.5)
+    for m in range(g['nn']):
+
+        # Plot the mesh coordinates to show the cells
+        ax.plot(g['x'][m],g['y'][m],color=cols[0,:],linewidth=0.5)  #change the colours per block
+        ax.plot(np.transpose(g['x'][m]),np.transpose(g['y'][m]),color=cols[0,:],
+            linewidth=0.5)
 
     # Draw the boundary of the block
-    plot_bound(ax,g)
+        plot_bound(ax,cut_block(g,m))
 
+    #scaling the limits of the graph
+    xmin = min(np.min(g['x'][m]) for m in range(g['nn']))
+    xmax = max(np.max(g['x'][m]) for m in range(g['nn']))
+    ymin = min(np.min(g['y'][m]) for m in range(g['nn']))
+    ymax = max(np.max(g['y'][m]) for m in range(g['nn']))
+
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
     # Show all the plots
     plt.savefig("myplot.png")
 

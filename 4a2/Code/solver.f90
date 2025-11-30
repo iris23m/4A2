@@ -11,6 +11,16 @@
 
 !     Use derived data types defined in a separate module
       use types
+      use timestep
+      use mesh
+      use area
+      use check
+      use guess
+      use loop
+      use interp
+      use patch
+      use secondary
+      use writeout
 
 !     Don't use historical implicit variable naming
       implicit none
@@ -18,10 +28,10 @@
 !     Explicitly declare the required variables
       type(t_appvars) :: av
       type(t_bconds) :: bcs
-      type(t_match) :: p
+      type(t_match), allocatable :: p(:)
       type(t_geometry) :: geom
-      type(t_grid) :: g
-      type(t_grid) :: g2
+      type(t_grid), allocatable :: g(:) !should it be allocatable
+      type(t_grid), allocatable :: g2(:)
       real :: d_max = 1, d_avg = 1
       integer :: nstep, nconv = 5, ncheck = 5, nchange = 5000
 
@@ -45,21 +55,21 @@
       else 
 
 !         Read the mesh coordinates directly from file - used for extension
-          call read_mesh(av,g,bcs,p)
+          call read_mesh(av,g,g2,bcs,p)
 
       end if
-
+      write(*,*) 'done reading mesh'
 !     Calculate cell areas and facet lengths
-      call calc_areas(g)
-      call calc_areas(g2)
+      call calc_areas(g,av)
+      call calc_areas(g2,av)
 
 !     Optional output call to inspect the mesh you have generated
       !i guess replace the grid to choose which one to inspect
       call write_output(av,g2,1)
 
 !     Check that the areas and projected lengths are correct
-      call check_mesh(g)
-      call check_mesh(g2)
+      call check_mesh(g,av)
+      call check_mesh(g2,av)
 
 !     Calculate the initial guess of the flowfield in the domain. There are two
 !     options that can be chosen with the input argument "guesstype":
@@ -71,6 +81,7 @@
 !            approximation to the converged flowfield and so the time to
 !            solution will be reduced. You will need to complete this option.
       call flow_guess(av,g,bcs,2)
+      
 
 !     Optional output call to inspect the initial guess of the flowfield
       call write_output(av,g,2)
@@ -78,7 +89,8 @@
 !     Set the length of the timestep, initially this is a constant based on a 
 !     conservative guess of the mach number
       call set_timestep(av,g,bcs)
-
+      
+      write(*,*) 'timestep'
 
 !     Open file to store the convergence history. This is human readable during
 !     a long run by using "tail -f conv_example.csv" in a terminal window
@@ -97,17 +109,21 @@
 
 !         Update record of nstep to use in subroutines
           av%nstep = nstep
-          if (nstep < 10000) then 
-                call sub_loop(av, g , bcs)
-          else if (nstep == 10000) then
-                call interpolate_mesh(g,g2,bcs)
-                deallocate(av%dt)
-                allocate(av%dt(g2%ni-1,g2%nj-1))
+          if (nstep < 1000) then 
+                call sub_loop(av, g , bcs, p)
+          else if (nstep == 1000) then
+                call interpolate_mesh(g,g2,bcs,av)
+                call set_secondary(av, g2)
+                call patch_blocks(g2, p ,av) !in case the interpolation creates discontinuities
+                !no longer need to reallocate dt as it is in grid 
+                call write_output(av,g2,3)
+            
                 call set_timestep(av, g2, bcs)
-                call sub_loop(av, g2, bcs)
+                call sub_loop(av, g2, bcs, p)
+
                 
           else 
-                call sub_loop(av, g2, bcs)
+                call sub_loop(av, g2, bcs, p)
           end if 
 
 

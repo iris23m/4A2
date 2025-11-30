@@ -15,7 +15,7 @@
 
 !         Timestepping, smoothing and other run options
           real ::  cfl, sfac, d_max, d_avg
-          real, dimension(:,:), allocatable :: dt
+          !dt was here
           integer :: nsteps, nstep
 
 !         Reference values of the primary flow variables
@@ -73,6 +73,8 @@
 
 !         Mesh size for all cases
           integer :: ni, nj
+
+          real, dimension(:,:), allocatable :: dt
 
 !         Mesh coordinate data in 2D matrices
           real, dimension(:,:), allocatable :: x, y, area, lx_i, ly_i, &

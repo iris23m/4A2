@@ -28,19 +28,39 @@ def main():
 
     # Plot the primary flow variables to show the guess
     fieldnames = ['ro','roe','rovx','rovy']
+    
     for n,name in enumerate(fieldnames):
- 
-        # Plot filled contour levels
-        hc = ax[n].pcolormesh(g['x'],g['y'],g[name],shading='gouraud')
+        mina = []
+        maxa = []
+        for m in range(g['nn']):
+            b = cut_block(g,m)
+            mina.append( np.min(b[name]) )
+            maxa.append( np.max(b[name]) )
+        minv = np.min(mina)
+        maxv = np.max(maxa)
+
+        for m in range(g['nn']):
+            # Plot filled contour levels
+            b = cut_block(g,m)
+            hc = ax[n].pcolormesh(b['x'],b['y'],b[name],shading='gouraud', vmin = minv, vmax = maxv)
+
+            # Draw the walls of the block
+            plot_wall(ax[n],b)
 
   	# Add colorbar with variable name
         colorbar(hc,name)
+        #scaling the limits of the graph
+        xmin = min(np.min(g['x'][m]) for m in range(g['nn']))
+        xmax = max(np.max(g['x'][m]) for m in range(g['nn']))
+        ymin = min(np.min(g['y'][m]) for m in range(g['nn']))
+        ymax = max(np.max(g['y'][m]) for m in range(g['nn']))
 
-        # Draw the walls of the block
-        plot_wall(ax[n],g)
+        ax[n].set_xlim(xmin, xmax)
+        ax[n].set_ylim(ymin, ymax)
+       
 
     # Show all the plots
-    plt.show(plt.savefig("myplot2.png"))
+    plt.savefig("myplot2.png")
 
 
 

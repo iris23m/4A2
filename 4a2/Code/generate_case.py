@@ -494,8 +494,8 @@ def main():
             x_2 = g['x'][n_2][i_2,j_2]; y_2 = g['y'][n_2][i_2,j_2];
 
             # Plot both sides of the patch with different symbols
-            ax.plot(x_1,y_1,'+',color=cols[m,:])
-            ax.plot(x_2,y_2,'x',color=cols[m,:])
+            #ax.plot(x_1,y_1,'+',color=cols[m,:])
+            #ax.plot(x_2,y_2,'x',color=cols[m,:])
 
             # Calculate and print the error
             d_max = np.max(np.hypot(x_2 - x_1,y_2 - y_1))
@@ -514,6 +514,7 @@ def main():
 
     # Show all the plots
     plt.show()
+    plt.savefig(casename + ".png")
 
     
 main()

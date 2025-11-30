@@ -1,4 +1,8 @@
       
+module bconds 
+      use types
+      implicit none
+contains
       subroutine apply_bconds(av,g,bcs)
 
 !     This subroutine applies both the inlet and outlet boundary conditions, as
@@ -9,14 +13,18 @@
       use types
       implicit none
       type(t_appvars), intent(in) :: av
-      type(t_grid), intent(inout) :: g
+      type(t_grid), intent(inout) :: g(:)
       type(t_bconds), intent(inout) :: bcs
 
 !     Declare the other variables you need here
 !     INSERTED
       real, allocatable :: T(:)
       real, allocatable :: V(:)
+      integer n_in
+      integer n_out
 
+      n_in = bcs%n_in
+      n_out = bcs%n_out
 !     At the inlet boundary the change in density is driven towards "rostag",
 !     which is then used to obtain the other flow properties to match the
 !     specified stagnation pressure, temperature and flow angle. 
@@ -29,9 +37,9 @@
 !     the values to be slightly less than "rostag". This can prevent the solver 
 !     crashing during severe transients.
       if(av%nstep == 1) then
-          bcs%ro = g%ro(1,:)
+          bcs%ro = g(n_in)%ro(1,:)
       else
-          bcs%ro = bcs%rfin * g%ro(1,:) + (1 - bcs%rfin) * bcs%ro
+          bcs%ro = bcs%rfin * g(n_in)%ro(1,:) + (1 - bcs%rfin) * bcs%ro
       endif
       bcs%ro = min(bcs%ro,0.9999 * bcs%rostag)
 
@@ -40,21 +48,22 @@
 !     "hstag(1,:)"
 !     INSERTED
       T = bcs%tstag * ( bcs%ro/bcs%rostag )**(av%gam-1)
-      g%p(1,:) = bcs%ro * av%rgas * T
+      g(n_in)%p(1,:) = bcs%ro * av%rgas * T
       V = sqrt( 2*av%cp * (bcs%tstag - T) )
-      g%vx(1,:) = V * cos(bcs%alpha)
-      g%vy(1,:) = V * sin(bcs%alpha)
-      g%rovx(1,:) = bcs%ro * g%vx(1,:)
-      g%rovy(1,:) =  bcs%ro * g%vy(1,:)
-      g%roe(1,:) = bcs%ro *(av%cv*T + 0.5*V**2)
-      g%hstag(1,:) = av%cp * bcs%tstag
+      g(n_in)%vx(1,:) = V * cos(bcs%alpha)
+      g(n_in)%vy(1,:) = V * sin(bcs%alpha)
+      g(n_in)%rovx(1,:) = bcs%ro * g(n_in)%vx(1,:)
+      g(n_in)%rovy(1,:) =  bcs%ro * g(n_in)%vy(1,:)
+      g(n_in)%roe(1,:) = bcs%ro *(av%cv*T + 0.5*V**2)
+      g(n_in)%hstag(1,:) = av%cp * bcs%tstag
 
 
 !     For the outlet boundary condition set the value of "p(ni,:)" to the
 !     specified value of static pressure "p_out" in "bcs"
 !     INSERTED
-      g%p(g%ni,:) = bcs%p_out
+      g(n_out)%p(g(n_out)%ni,:) = bcs%p_out
 
       end subroutine apply_bconds
+end module
 
 

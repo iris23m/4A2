@@ -15,7 +15,7 @@
 
 !     Get the size of the mesh and store locally for convenience
       ni = av%ni; nj = av%nj;
-      allocate(av%dt(ni-1,nj-1))
+      allocate(g%dt(ni-1,nj-1))
 
 !     Copy the mesh size to the grid datatype
       g%ni = ni; g%nj = nj;

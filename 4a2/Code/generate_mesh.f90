@@ -1,5 +1,5 @@
       
-      subroutine generate_mesh(geom,g, g2, g3)
+      subroutine generate_mesh(geom,g, g2)!, g3)
 
 !     Create cells of the mesh to cover the domain defined by geometry curves,
 !     the values of the node coordinates, x(i,j) and y(i,j) are stored in "g"
@@ -11,7 +11,7 @@
       type(t_geometry), intent(in) :: geom
       type(t_grid), intent(inout) :: g
       type(t_grid), intent(inout) :: g2
-      type(t_grid), intent(inout) :: g3
+      !type(t_grid), intent(inout) :: g3
       real :: si_a(geom%ni_a), si_b(geom%ni_b), si(g%ni)
       integer :: ni, nj
 
@@ -38,7 +38,7 @@
             call linspace(0.0,1.0,si)
             write(*,*) si
       else if(case == 3) then
-            centre = 0.32
+            centre = 0.3
             size = NINT(ni * centre)
             write(*,*) size
             allocate(si_1(size))
@@ -59,7 +59,7 @@
             do i = 1,size
                   si_1(i) = centre - dsi * (1-r**(i-1))/(1-r)
             end do
-            n = ni - size -1
+            n = ni - size !-1
             r = 1.2
             do 
                   f = dsi*(1 - r**(n))/(1 - r) -(1-centre)

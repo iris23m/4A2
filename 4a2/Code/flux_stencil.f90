@@ -8,7 +8,7 @@
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      subroutine sum_fluxes(av,flux_i,flux_j,area,prop,dcell)
+      subroutine sum_fluxes(av,flux_i,flux_j,area,prop,dcell,dt)
 
 !     This subroutine sums the fluxes into each cell, calculates the change in 
 !     the cell property inside, distributes the change to the four nodes of the
@@ -19,10 +19,12 @@
       implicit none
       type(t_appvars), intent(in) :: av
       real, intent(in) :: flux_i(:,:), flux_j(:,:), area(:,:)
+      real, intent(in) :: dt(:,:)
       real, intent(inout) :: prop(:,:)
       real, intent(out) :: dcell(:,:)
       real, dimension(size(prop,1),size(prop,2)) :: dnode
-      integer :: ni, nj
+      integer :: ni, nj, n
+      
 
 !     Get the block size and store locally for convenience
       ni = size(prop,1); nj = size(prop,2)
@@ -30,7 +32,8 @@
 !     Use the finite volume method to find the change in the variables "prop"
 !     over the timestep "dt", save it in the array "dcell"
 !     INSERTED
-      dcell = ( flux_i(1:ni-1,:) - flux_i(2:ni,:) + flux_j(:,1:nj-1) - flux_j(:,2:nj) ) * av%dt/area
+      
+      dcell = ( flux_i(1:ni-1,:) - flux_i(2:ni,:) + flux_j(:,1:nj-1) - flux_j(:,2:nj) ) * dt(1:ni-1,1:nj-1)/area
 
 !     Now distribute the changes equally to the four corners of each cell. Each 
 !     interior grid point receives one quarter of the change from each of the 
