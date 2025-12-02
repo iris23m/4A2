@@ -24,6 +24,7 @@ contains
       integer n_out
 
       n_in = bcs%n_in
+      write(*,*) 'block' , n_in
       n_out = bcs%n_out
 !     At the inlet boundary the change in density is driven towards "rostag",
 !     which is then used to obtain the other flow properties to match the

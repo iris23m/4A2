@@ -2,13 +2,14 @@ module writeout
       use types
       implicit none
 contains
-      subroutine write_output(av,g,outtype)
+      subroutine write_output(av,g,bcs,outtype)
       
 !     Explicitly declare the required variables
       use types
       implicit none
       type(t_appvars), intent(in) :: av
       type(t_grid), intent(in) :: g(:)
+      type(t_bconds), intent(in) :: bcs
       integer, intent(in) :: outtype
       character(len=5) :: outname
       integer :: n
@@ -31,7 +32,7 @@ contains
 !     structure.
       open(unit=7,file='out_' // outname // '_' // av%casename // '.bin', &
           form='unformatted',access='stream',status='replace')
-
+      
       do n= 1,av%nn
       !     Write the size of the mesh
             write(7) [g(n)%ni, g(n)%nj]
@@ -68,6 +69,8 @@ contains
 
             end if
       end do
+      write(7) bcs%n_in
+      write(*,*) 'bloclk' ,bcs%n_in
 
 !     Close the unit
       close(7)

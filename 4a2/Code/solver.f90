@@ -65,7 +65,7 @@
 
 !     Optional output call to inspect the mesh you have generated
       !i guess replace the grid to choose which one to inspect
-      call write_output(av,g2,1)
+      call write_output(av,g2,bcs,1)
 
 !     Check that the areas and projected lengths are correct
       call check_mesh(g,av)
@@ -80,11 +80,11 @@
 !            flow in the i-direction allows a calculation of a better
 !            approximation to the converged flowfield and so the time to
 !            solution will be reduced. You will need to complete this option.
-      call flow_guess(av,g,bcs,2)
+      call flow_guess(av,g,bcs,1)
       
 
 !     Optional output call to inspect the initial guess of the flowfield
-      call write_output(av,g,2)
+      call write_output(av,g,bcs,2)
 
 !     Set the length of the timestep, initially this is a constant based on a 
 !     conservative guess of the mach number
@@ -109,14 +109,14 @@
 
 !         Update record of nstep to use in subroutines
           av%nstep = nstep
-          if (nstep < 1000) then 
+          if (nstep < 1) then 
                 call sub_loop(av, g , bcs, p)
-          else if (nstep == 1000) then
+          else if (nstep == 1) then
                 call interpolate_mesh(g,g2,bcs,av)
                 call set_secondary(av, g2)
                 call patch_blocks(g2, p ,av) !in case the interpolation creates discontinuities
                 !no longer need to reallocate dt as it is in grid 
-                call write_output(av,g2,3)
+                call write_output(av,g2,bcs,3)
             
                 call set_timestep(av, g2, bcs)
                 call sub_loop(av, g2, bcs, p)
@@ -139,7 +139,7 @@
 !     Calculation finished, call "write_output" to write the final, not 
 !     necessarily converged flowfield
       write(6,*) 'Calculation completed after', av%nstep,'iterations'
-      call write_output(av,g,3)
+      call write_output(av,g,bcs,3)
 !
 !     Close open convergence history file
       close(3)

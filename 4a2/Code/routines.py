@@ -668,7 +668,9 @@ def read_case(filename):
             for n,name in enumerate(fieldnames):
                 g[name].append( np.fromfile(f,dtype=np.float32,count=ni*nj) )
                 g[name][m] = np.reshape(g[name][m],[ni,nj],order='F')
-
+    
+    g['n_in'] =  np.fromfile(f,dtype=np.int32,count=1).item()
+    
     # Close the file
     f.close()
 

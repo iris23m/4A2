@@ -24,7 +24,9 @@ def main():
     #    1. Static pressure coefficient, (p - p_ref) / (pstag_ref - p_ref)
     #    2. Mach number, v / (ga * rgas * t)**0.5
     block = []
-  
+    c = cut_block(g, g['n_in'])
+    c = calc_secondary(av,c)
+    #g['n_in'] = calc_secondary(av,g['n_in'])
     for m in range(g['nn']):
         b = cut_block(g,m)
     # First complete the "calc_secondary" function within "routines.py" to
@@ -35,10 +37,11 @@ def main():
     # reference pressures at the inlet plane and therefore the static pressure
     # coefficient
     # INSERT
-        inletcut = cut_i(b,0)
+        inletcut = cut_i(c,0)  #make this the inlet block!
         p_ref, mass = mass_av(inletcut, 'p')
         pstag_ref, mass = mass_av(inletcut, 'pstag')
-        print(b['p'].shape)
+        
+        print('reference pressures')
         print(p_ref)
         print(pstag_ref)
         b['cp'] = (b['p'] - p_ref) / (pstag_ref-p_ref)

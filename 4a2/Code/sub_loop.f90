@@ -45,7 +45,7 @@ subroutine sub_loop(av,g,bcs,p)
 !         Check the solution hasn't diverged or a stop has been requested 
 !         every "ncheck" steps
       if(mod(av%nstep,ncheck) == 0) then
-            call check_stop(av,g)
+            call check_stop(av,g,bcs)
       end if
 
 

@@ -36,6 +36,10 @@ def main():
             b = cut_block(g,m)
             mina.append( np.min(b[name]) )
             maxa.append( np.max(b[name]) )
+        print(name)
+        print(mina)
+        print(maxa)
+
         minv = np.min(mina)
         maxv = np.max(maxa)
 

@@ -2,7 +2,7 @@ module checkstop
       use types
       implicit none
 contains
-      subroutine check_stop(av,g)
+      subroutine check_stop(av,g,bcs)
 
 !     This subroutine checks for divergence in the calculation by the presence
 !     of NaNs in the density field
@@ -12,6 +12,7 @@ contains
       use writeout
       implicit none
       type(t_appvars), intent(in) :: av
+      type(t_bconds), intent(in) :: bcs
       type(t_grid), intent(inout) :: g(:)
       integer :: ifstop, n 
 
@@ -30,7 +31,7 @@ contains
 !     Write output file if stop file is not zero
       if(ifstop > 1) then
           write(6,*) '"ifstop" modified, writing an output'
-          call write_output(av,g,3)
+          call write_output(av,g,bcs,3)
       end if
  
 !     Finish the calculation if stop file equals 2
